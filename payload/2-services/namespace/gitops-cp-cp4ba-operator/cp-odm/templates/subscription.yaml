@@ -1,0 +1,34 @@
+
+apiVersion: icp4a.ibm.com/v1
+kind: ICP4ACluster
+metadata: 
+  annotations:
+    argocd.argoproj.io/sync-wave: "15"
+  labels: 
+    app.kubernetes.io/instance: ibm-dba
+    app.kubernetes.io/managed-by: ibm-dba
+    app.kubernetes.io/name: ibm-dba
+    release: "21.0.3"
+  name: icp4adeploy
+  namespace: {{ .Values.cp4ba.namespace }}
+spec: 
+  appVersion: {{ .Values.cp4ba.odm_image_version }}
+  datasource_configuration: 
+    dc_odm_datasource: 
+      database_servername: {{ .Values.cp4ba.db_server }}
+      dc_common_database_instance_secret: ibm-dba-odm-db-secret
+      dc_common_database_name: {{ .Values.cp4ba.odm_db_name }}
+      dc_common_database_port: "{{ .Values.cp4ba.odm_db_port }}"
+      dc_common_ssl_enabled: false
+      dc_database_type: {{ .Values.cp4ba.odm_db_type }}
+      dc_ssl_secret_name: {{ .Values.cp4ba.odm_db_secret }}
+  ibm_license: accept
+  shared_configuration:
+    sc_deployment_license: non-prod 
+    sc_deployment_context: CP4A
+    sc_deployment_patterns: decisions
+    sc_deployment_platform: ROKS
+    sc_optional_components: "decisionCenter,decisionRunner,decisionServerRuntime"
+
+  
+
